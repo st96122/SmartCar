@@ -2,10 +2,12 @@ from __future__ import print_function
 import struct
 from panda import Panda
 import numpy as np
+from cantools.db import load_file as load_dbc_file
 
 
 # serial = u'1f0032000651363038363036'    # recv
 # serial = u'520039000651363038363036'    # send
+fingerprint = []
 
 
 def binary_show(bytes):
@@ -61,7 +63,7 @@ def create_speedometer_3CA(speed, bus=0, cks=False):
 
 
 class Prius(object):
-    def __init__(self):
+    def __init__(self, dbc=False):
         panda_list = Panda.list()
         # choose panda serial prot
         if len(panda_list) > 1:
@@ -82,6 +84,10 @@ class Prius(object):
             print('Not Panda connect')
             exit()
 
+        if dbc:
+            self.can_msg_parser = load_dbc_file(dbc)
+            print(self.can_msg_parser.messages)
+
     def send_speed(self, speed=0):
         can_send = [create_speedometer_B4(self.frame, speed, 0, True), create_speedometer_B1(speed, 0, True),
                     create_speedometer_B3(speed, 0, True), create_speedometer_3CA(speed, 0)]
@@ -100,10 +106,33 @@ class Prius(object):
             can_send.append([0x5B6, 0, msg, 0])
             self.panda.can_send_many(can_send)
 
-    def recv(self):
+    def recv_print(self, mode='all'):
         can_msgs = self.panda.can_recv()
-        can_msgs_bytes = []
-        for address, _, dat, src in can_msgs:
-            can_msgs_bytes.append((address, 0, bytes(dat), src))
-            if address == 0xb4:
-                print("Address: {}\t Data: {}\t src: {}".format(address, binary_show(dat), src))
+        if mode == 'dbc':
+            for msg in can_msgs:
+                # print('123456')
+                # print(msg)
+                try:
+                    print(self.can_msg_parser.decode_message(msg[0], msg[2]))
+                except:
+                    pass
+        else:
+            can_msgs_bytes = []
+            for address, _, dat, src in can_msgs:
+                can_msgs_bytes.append((address, 0, bytes(dat), src))
+                if mode == 'all':
+                    print("Address: {}\t Data: {}\t src: {}".format(address, binary_show(dat), src))
+                elif address == 0xb4:
+                    print("Address: {}\t Data: {}\t src: {}".format(address, binary_show(dat), src))
+
+    def recv(self, mode='all'):
+        can_msgs = self.panda.can_recv()
+        for msg in can_msgs:
+            try:
+                data_dict = self.can_msg_parser.decode_message(msg[0], msg[2])
+
+                print()
+            except:
+                pass
+
+

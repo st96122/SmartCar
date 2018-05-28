@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import time
 import thread
+
+
 def f0x25(j,frame,kj):
     global tt2
     if (tt2 == 0 or tt2 != kj):
@@ -19,6 +21,8 @@ def f0x25(j,frame,kj):
             nk=int(nk,2)
             cv2.putText(frame, '-'+str(nk), (550, 250), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
         tt2=kj
+
+
 def f0x230(j,frame):
 
     v = (int(j[3], 16))
@@ -37,6 +41,7 @@ def f0x230(j,frame):
         print(j[3] + ' no_brake')
         cv2.putText(frame, 'no_brake', (50, 200), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
 
+
 def f0x5b6(j,frame):
 
     if(j[3][4:5]=='8'):
@@ -45,6 +50,7 @@ def f0x5b6(j,frame):
     if (j[3][4:5] == '0'):
         print(j[3] + '  open')
         cv2.putText(frame, 'door open', (550, 150), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
+
 
 def f0x57f(j,frame):
     v=(int(j[3],16))
@@ -63,6 +69,7 @@ def f0x57f(j,frame):
         print(j[3]+' light off')
         cv2.putText(frame, 'light off', (0, 250), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
 
+
 def f0x120(j,frame):
 
     {
@@ -70,23 +77,30 @@ def f0x120(j,frame):
         '20': lambda:pr('p',j[3][12:14]),
         '22': lambda:pr('n',j[3][12:14])
     }.get(j[3][12:14], lambda:pr('',j[3][12:14]))()
+
+
 def f0xb4(j,frame,kj):
     v=int(j[3][12:16],16)*0.011
     global tt
     if(tt == 0 or tt!=kj):
         cv2.putText(frame, str(v), (0, 400), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
         tt=kj
+
+
 def pr(k,j):
     print(j+'  '+k)
     cv2.putText(frame, k, (0, 500), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
-def prvideo(frame):
 
+
+def prvideo(frame):
     cv2.putText(frame, lk[kj][1], (0, 150), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
     cv2.imshow('frame', frame)
     print('lk=   ' + str(lk[kj]))
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
         cv2.destroyAllWindows()
+
+
 def primg(kk):
     img = cv2.imread('car_logger/' + kk)
     cv2.putText(img, lk[kj][1], (0, 150), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 6)
@@ -97,6 +111,8 @@ def primg(kk):
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
         cv2.destroyAllWindows()
+
+
 def nott(v,le):
     k=''
     for i in range(0,le):
@@ -105,6 +121,8 @@ def nott(v,le):
         else:
             k=k+'0'
     return k
+
+
 tt=0
 tt2=0
 cap=cv2.VideoCapture('0524.avi')
