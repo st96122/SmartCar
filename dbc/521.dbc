@@ -55,7 +55,7 @@ BO_ 170 WHEEL_SPEEDS: 8 XXX
 BO_ 180 SPEED: 8 XXX
  SG_ ENCODER : 39|8@0+ (1,0) [0|255] "" XXX
  SG_ CHECKSUM : 63|8@0+ (1,0) [0|255] "" XXX
- SG_ NEW_SIGNAL_1 : 47|16@0+ (0.01,0) [0|65535] "" XXX
+ SG_ SPEED : 47|16@0+ (0.01,0) [0|65535] "" XXX
 
 BO_ 466 PCM_CRUISE: 8 XXX
  SG_ GAS_RELEASED : 4|1@0+ (1,0) [0|1] "" XXX
@@ -68,10 +68,8 @@ BO_ 552 ACCELEROMETER: 8 XXX
  SG_ ACCEL_Z : 22|15@0- (1,0) [0|32767] "" XXX
  SG_ ACCEL_X : 6|15@0- (0.001,0) [-20|20] "m/s2" XXX
 
-BO_ 560 BRAKE_MODULE2: 8 XXX
- SG_ checksum : 55|8@0+ (1,0) [0|255] "" XXX
- SG_ counter_that_increments_while_car_is_moving : 7|8@0+ (1,0) [0|255] "" XXX
- SG_ counter_that_increments_while_car_is_moving1 : 15|8@0+ (1,0) [0|255] "" XXX
+BO_ 560 BRAKE_MODULE2: 7 XXX
+ SG_ CHECKSUM : 55|8@0+ (1,0) [0|255] "" XXX
  SG_ brake_LI : 26|1@1+ (1,0) [0|1] "" XXX
  SG_ brake_H : 29|1@0+ (1,0) [0|1] "" XXX
  SG_ handcrat : 24|1@1+ (1,0) [0|3] "" XXX
@@ -194,11 +192,11 @@ BO_ 1083 AUTOPARK_STATUS: 8 IPAS
  SG_ STATE : 7|4@0+ (1,0) [0|15] "" XXX
 
 BO_ 179 SPEED_2: 8 XXX
- SG_ SPEED : 7|16@0+ (1,0) [0|65535] "" XXX
+ SG_ SPEED_2 : 7|16@0+ (1,0) [0|65535] "" XXX
  SG_ CHECKSUM : 47|8@0+ (1,0) [0|255] "" XXX
 
 BO_ 177 SPEED_1: 8 XXX
- SG_ SPEED : 7|16@0+ (1,0) [0|65535] "" XXX
+ SG_ SPEED_1 : 7|16@0+ (1,0) [0|65535] "" XXX
  SG_ CHECKSUM : 47|8@0+ (1,0) [0|255] "" XXX
 
 BO_ 970 gear_uncertain: 8 XXX
@@ -223,9 +221,9 @@ BO_ 2019 NEW_MSG_6: 8 XXX
 BO_ 2027 NEW_MSG_7: 8 XXX
  SG_ NEW_SIGNAL_1 : 7|24@0+ (1,0) [0|16777215] "" XXX
 
-BO_ 1462 door: 8 XXX
- SG_ doorpause : 7|8@0+ (1,0) [0|255] "" XXX
- SG_ door_80off : 15|8@0+ (1,0) [0|255] "" XXX
+BO_ 1462 DOOR: 3 XXX
+ SG_ door_pause : 7|8@0+ (1,0) [0|255] "" XXX
+ SG_ door_lock : 15|8@0+ (1,0) [0|255] "" XXX
 
 BO_ 1517 NEW_MSG_8: 8 XXX
 
@@ -240,10 +238,10 @@ BO_ 1484 NEW_MSG_12: 8 XXX
  SG_ NEW_SIGNAL_2 : 15|8@0+ (1,0) [0|255] "" XXX
  SG_ NEW_SIGNAL_3 : 23|8@0+ (1,0) [0|255] "" XXX
 
-BO_ 1407 NEW_MSG_13: 8 XXX
- SG_ Headlamps_1 : 12|1@0+ (1,0) [0|3] "" XXX
- SG_ Headlamps_2 : 13|2@0+ (1,0) [0|3] "" XXX
- SG_ Headlamps_3 : 11|1@1+ (1,0) [0|3] "" XXX
+BO_ 1407 Headlamps: 7 XXX
+ SG_ LIGHT_SMALL : 12|1@0+ (1,0) [0|3] "" XXX
+ SG_ LIGHT_BIG : 13|1@0+ (1,0) [0|3] "" XXX
+ SG_ LIGHT_FLASH : 11|1@1+ (1,0) [0|3] "" XXX
  SG_ pause : 7|8@0+ (1,0) [0|255] "" XXX
 
 BO_ 580 NEW_MSG_14: 8 XXX
@@ -254,7 +252,7 @@ BO_ 840 NEW_MSG_15: 8 XXX
  SG_ NEW_SIGNAL_2 : 15|16@0+ (1,0) [0|255] "" XXX
  SG_ NEW_SIGNAL_1 : 39|16@0+ (0.0012,0) [0|255] "" XXX
 
-BO_ 288 gear: 8 XXX
+BO_ 288 GEAR: 8 XXX
  SG_ gear_1 : 47|8@0+ (1,0) [0|255] "" XXX
  SG_ gear_2 : 63|8@0+ (1,0) [0|255] "" XXX
 

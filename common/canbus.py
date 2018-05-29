@@ -1,13 +1,17 @@
 from __future__ import print_function
 import struct
-from panda import Panda
 import numpy as np
+from collections import OrderedDict
+from panda import Panda
 from cantools.db import load_file as load_dbc_file
 
 
-# serial = u'1f0032000651363038363036'    # recv
-# serial = u'520039000651363038363036'    # send
-fingerprint = []
+fingerprint = OrderedDict(((37, ['wheel_angle']),
+                           (180, ['SPEED']),
+                           (288, ['gear_1', 'gear_2']),
+                           (560, ['brake_LI', 'brake_H', 'handcrat']),
+                           (1407, ['LIGHT_SMALL', 'LIGHT_BIG', 'LIGHT_FLASH']),
+                           (1462, ['door_lock'])))
 
 
 def binary_show(bytes):
@@ -72,7 +76,6 @@ class Prius(object):
             serial = panda_list[input('Please input 1, 2,.... or 10 number: ') - 1]
         else:
             serial = panda_list[0]
-
         # Connect to panda
         if serial in panda_list:
             self.panda = Panda(serial)
@@ -83,10 +86,14 @@ class Prius(object):
         else:
             print('Not Panda connect')
             exit()
-
+        # add dbc decoder
         if dbc:
             self.can_msg_parser = load_dbc_file(dbc)
             print(self.can_msg_parser.messages)
+        self.upload_data = OrderedDict((('wheel_angle', 0), ('SPEED', 0), ('gear_1', 35), ('gear_2', 96),
+                                        ('brake_LI', 0), ('brake_H', 0), ('handcrat', 0),
+                                        ('LIGHT_SMALL', 0), ('LIGHT_BIG', 0), ('LIGHT_FLASH', 0),
+                                        ('door_lock', 128)))
 
     def send_speed(self, speed=0):
         can_send = [create_speedometer_B4(self.frame, speed, 0, True), create_speedometer_B1(speed, 0, True),
@@ -110,12 +117,12 @@ class Prius(object):
         can_msgs = self.panda.can_recv()
         if mode == 'dbc':
             for msg in can_msgs:
-                # print('123456')
-                # print(msg)
-                try:
-                    print(self.can_msg_parser.decode_message(msg[0], msg[2]))
-                except:
-                    pass
+                if msg[0] in fingerprint.keys():
+                    try:
+                        print(msg[0])
+                        print(self.can_msg_parser.decode_message(msg[0], msg[2]))
+                    except:
+                        pass
         else:
             can_msgs_bytes = []
             for address, _, dat, src in can_msgs:
@@ -125,14 +132,16 @@ class Prius(object):
                 elif address == 0xb4:
                     print("Address: {}\t Data: {}\t src: {}".format(address, binary_show(dat), src))
 
-    def recv(self, mode='all'):
+    def recv(self):
         can_msgs = self.panda.can_recv()
         for msg in can_msgs:
             try:
-                data_dict = self.can_msg_parser.decode_message(msg[0], msg[2])
-
-                print()
+                if msg[0] in fingerprint.keys():
+                    data_dict = self.can_msg_parser.decode_message(msg[0], msg[2])
+                    for i in fingerprint[msg[0]]:
+                        self.upload_data[i] = data_dict[i]
             except:
                 pass
+        return self.upload_data
 
 

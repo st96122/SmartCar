@@ -48,7 +48,7 @@ def main():
             if delay_time > 0:
                 time.sleep(delay_time)
             else:
-                can_now_time = can_now_time - delay_time + 15.000e-05
+                can_now_time = can_now_time - delay_time + 15.100e-05
 
         sys_pre_time = time.time()
         can_pre_time = can_now_time
