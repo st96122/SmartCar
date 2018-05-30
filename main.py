@@ -39,14 +39,12 @@ def video(stop_event):
         img = cv2.imread(DATA_PATH + '/' + k + '.png')
         cv2.imshow('img', img)
         i += 1
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(115) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             return
         if i>1052:
             cv2.destroyAllWindows()
             return
-        time.sleep(0.08)
-
 def main(rate=100):
     global can_recv
     global cap
