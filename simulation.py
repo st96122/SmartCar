@@ -32,26 +32,29 @@ def main():
         can_now_time = data[0]
         addr = int(data[2], 16)
         msg = data[3].split('x')[-1]
+
         msg = [struct.pack('B', int(msg[i:i + 2], 16)) for i in xrange(0, len(msg), 2)]
+        #print(msg)
         msg = "".join(msg)
+
         sim.send_data([[addr, 0, msg, 0]])
+
 
         # print "can {}".format(can_now_time - can_pre_time)
         # print "sys {}".format((time.time() - sys_pre_time))
         # print can_now_time - can_pre_time - (time.time() - sys_pre_time)
-        if first_time:
-            time.sleep(can_now_time - can_pre_time)
-            first_time = False
-        else:
-            can_time = can_now_time - can_pre_time
-            delay_time = can_time - time.time() + sys_pre_time
-            if delay_time > 0:
-                time.sleep(delay_time)
-            else:
-                can_now_time = can_now_time - delay_time + 15.100e-05
-
-        sys_pre_time = time.time()
-        can_pre_time = can_now_time
+        # if first_time:
+        #     time.sleep(can_now_time - can_pre_time)
+        #     first_time = False
+        # else:
+        #     can_time = can_now_time - can_pre_time
+        #     delay_time = can_time - time.time() + sys_pre_time
+        #     if delay_time > 0:
+        #         time.sleep(delay_time)
+        #     else:
+        #         can_pre_time = can_now_time - delay_time + 15.100e-05
+        #
+        # sys_pre_time = time.time()
 
     print "System running time\t{}".format(time.time()-sys_start_time)
     print "CAN messing running time\t{}".format(can_now_time-can_start_time)

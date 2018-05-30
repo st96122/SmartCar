@@ -2,7 +2,7 @@ import os
 import sys
 import time
 import threading
-
+import cv2
 from common.firebase_db import Car2Firebase
 from common.realtime import Ratekeeper
 from common.canbus import Prius
@@ -16,22 +16,49 @@ dbc_file = 'dbc/521.dbc'
 prius_can = Prius(dbc_file)
 car2firebase = Car2Firebase()
 can_recv = False
-
+i=1
 
 def upload_data(stop_event):
+
     while not stop_event.isSet():
         pre_time = time.time()
+
         # upload all data to firebase
         car2firebase.upload_all(can_recv)
-        # print(can_recv)
-        # print time.time() - pre_time
 
+        print(can_recv)
+
+        #print time.time() - pre_time
+def video(stop_event):
+    i=1
+    while not stop_event.isSet():
+
+        k = str(i).zfill(10)
+
+
+        img = cv2.imread(DATA_PATH + '/' + k + '.png')
+        cv2.imshow('img', img)
+        i += 1
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            return
+        if i>1052:
+            cv2.destroyAllWindows()
+            return
+        time.sleep(0.08)
 
 def main(rate=100):
     global can_recv
+    global cap
+    global thread2
+    cap = cv2.VideoCapture(DATA_PATH + '/0524.avi')
+
     thread_stop = threading.Event()
     thread = threading.Thread(target=upload_data, args=(thread_stop, ))
     thread.start()
+
+    thread2 = threading.Thread(target=video, args=(thread_stop,))
+    thread2.start()
 
     rk = Ratekeeper(rate, print_delay_threshold=2. / 1000)
     try:
